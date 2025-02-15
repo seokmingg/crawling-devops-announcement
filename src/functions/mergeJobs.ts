@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import {JobListingDTO} from "../dto/JobListing.dto";
 
 const resultDir = path.join(__dirname, "../result"); // 크롤링 결과 폴더
 
@@ -11,6 +12,7 @@ export async function mergeJobListings() {
             console.error("❌ 크롤링 데이터 폴더가 없습니다.");
             return;
         }
+
         const latestDateFolder = dateFolders.sort().reverse()[0]; // 최신 날짜 폴더 선택
         const latestFolderPath = path.join(resultDir, latestDateFolder);
 
@@ -18,7 +20,7 @@ export async function mergeJobListings() {
 
         // 📌 JSON 파일 읽기
         const jobFiles = fs.readdirSync(latestFolderPath).filter(file => file.endsWith(".json"));
-        let allJobs: { title: string; company: string; link: string }[] = [];
+        let allJobs: JobListingDTO[] = [];
 
         for (const file of jobFiles) {
             if (file === "merged_jobs.json") continue; // ✅ 기존 병합 파일 제외
@@ -39,6 +41,14 @@ export async function mergeJobListings() {
 
         console.log(`🔎 DevOps 관련 공고 ${devopsJobs.length}개 필터링 완료!`);
 
+        // 📌 회사명에서 "(주)" 또는 "주식회사" 제거
+        devopsJobs.forEach(job => {
+            job.company = job.company
+                // ㈜, (주), 주식회사 패턴을 모두 제거 (문자열 어디에 있든지 전역 삭제)
+                .replace(/(\(주\)|주식회사|㈜)/g, "")
+                // 제거 후 남은 공백도 정리
+                .trim();
+        });
 
         // 📌 중복 제거 (회사명 기준)
         const uniqueJobs = Array.from(new Map(devopsJobs.map(job => [job.company, job])).values());
