@@ -8,6 +8,8 @@ dist/
 # IntelliJ IDEA settings
 .idea/
 
+#크롤링 결과물 폴더
+src/result
 
 # 환경 변수 파일 (API 키 등)
 .env
