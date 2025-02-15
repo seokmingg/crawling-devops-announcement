@@ -27,17 +27,17 @@ export const jobkoreaScraper: Scraper = {
                     const titleElement = jobCard.querySelector(".information-title-link");
                     const companyElement = jobCard.querySelector(".corp-name-link");
                     const linkElement = jobCard.querySelector(".information-title-link");
-                    const locationElement = jobCard.querySelector(".chip-information-group li:last-child");
-                    const jobTypeElement = Array.from(jobCard.querySelectorAll(".chip-information-group li"))
-                        .map(li => li.textContent?.trim())
-                        .filter(text => text && (text.includes("정규직") || text.includes("계약직") || text.includes("인턴")))[0];
+                    // const locationElement = jobCard.querySelector(".chip-information-group li:last-child");
+                    // const jobTypeElement = Array.from(jobCard.querySelectorAll(".chip-information-group li"))
+                    //     .map(li => li.textContent?.trim())
+                    //     .filter(text => text && (text.includes("정규직") || text.includes("계약직") || text.includes("인턴")))[0];
 
                     return {
                         title: titleElement ? titleElement.textContent?.trim() || "제목 없음" : "제목 없음",
                         company: companyElement ? companyElement.textContent?.trim() || "회사 정보 없음" : "회사 정보 없음",
                         link: linkElement ? `https://www.jobkorea.co.kr${linkElement.getAttribute("href")}` : "링크 없음",
-                        location: locationElement ? locationElement.textContent?.trim() || "위치 정보 없음" : "위치 정보 없음",
-                        jobType: jobTypeElement || "채용 형태 없음"
+                        // location: locationElement ? locationElement.textContent?.trim() || "위치 정보 없음" : "위치 정보 없음",
+                        // jobType: jobTypeElement || "채용 형태 없음"
                     };
                 });
             });
