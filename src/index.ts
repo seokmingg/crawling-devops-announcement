@@ -7,7 +7,7 @@ import { saraminScraper } from "./functions/crawlers/saraminScraper";
 import { catchScraper } from "./functions/crawlers/catchScraper";
 import {jobkoreaScraper} from "./functions/crawlers/jobkoreaScraper";
 import { mergeJobListings } from "./functions/mergeJobs"; // ✅ 병합 함수 추가
-
+import { fetchTeamBlindData } from "./functions/fetchTeamBlindData";
 
 
 const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catchScraper,jobkoreaScraper];
@@ -46,11 +46,18 @@ const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catch
         }
     });
 
-    console.log("\n🔄 크롤링 완료! 병합 프로세스 시작...");
 
-    // ✅ 크롤링 완료 후 자동으로 병합 실행
-    await mergeJobListings();
-
-    console.log("\n🚀 모든 크롤링 및 병합 작업 완료!");
+    // 2) 크롤링 브라우저 종료
     await browser.close();
+
+    // 3) 병합 실행
+    console.log("\n🔄 크롤링 완료! 병합 프로세스 시작...");
+    await mergeJobListings();
+    console.log("\n🚀 병합 작업 완료!");
+
+    // 4) 병합 후 자동으로 별점·리뷰 추가
+    console.log("\n⭐ 팀블라인드 별점·리뷰 추가 시작...");
+    await fetchTeamBlindData();
+    console.log("\n✅ 팀블라인드 별점·리뷰까지 모두 완료!");
+
 })();
