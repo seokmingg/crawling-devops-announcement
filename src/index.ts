@@ -5,9 +5,12 @@ import { wantedScraper } from "./functions/crawlers/wantedScraper";
 import { jumpitScraper } from "./functions/crawlers/jumpitScraper";
 import { saraminScraper } from "./functions/crawlers/saraminScraper";
 import { catchScraper } from "./functions/crawlers/catchScraper";
+import {jobkoreaScraper} from "./functions/crawlers/jobkoreaScraper";
 import { mergeJobListings } from "./functions/mergeJobs"; // ✅ 병합 함수 추가
 
-const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catchScraper];
+
+
+const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catchScraper,jobkoreaScraper];
 
 (async () => {
     const { browser, page } = await launchPuppeteer();
