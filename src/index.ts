@@ -1,28 +1,20 @@
 import { launchPuppeteer } from "./functions/puppeteerSetup";
-import { autoScroll } from "./functions/autoScroll";
-import { getJobListings } from "./functions/getJobListings";
 import { saveToFile } from "./functions/saveToFile";
-import { JobListingDTO } from "./dto/JobListing.dto";
+import { Scraper } from "./functions/crawlers/Scraper";
+import { wantedScraper } from "./functions/crawlers/wantedScraper";
+import { jumpitScraper } from "./functions/crawlers/jumpitScraper";
+
+const scrapers: Scraper[] = [wantedScraper, jumpitScraper];
 
 (async () => {
     const { browser, page } = await launchPuppeteer();
-    const url = "https://www.wanted.co.kr/search?query=devops&tab=overview";
 
-    await page.goto(url, { waitUntil: "networkidle2" });
+    for (const scraper of scrapers) {
+        console.log(`🔍 ${scraper.siteName} 크롤링 시작...`);
+        const jobListings = await scraper.scrape(page);
+        await saveToFile(jobListings, scraper.siteName);
+    }
 
-    // 특정 요소가 나타날 때까지 대기
-    await page.waitForSelector(".JobCard_container__REty8", { timeout: 10000 });
-
-    // 스크롤 처리
-    await autoScroll(page);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // 채용 공고 데이터 가져오기
-    const jobListings:JobListingDTO[] = await getJobListings(page);
-
-    // JSON 파일 저장
-    await saveToFile(jobListings);
-
-    console.log("✅ 크롤링 완료!");
+    console.log("✅ 모든 사이트 크롤링 완료!");
     await browser.close();
 })();
