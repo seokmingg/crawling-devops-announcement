@@ -32,8 +32,16 @@ export async function mergeJobListings() {
 
         console.log(`📊 총 ${allJobs.length}개의 공고 데이터 수집 완료!`);
 
+        // 📌 "devops" 포함된 공고만 필터링
+        const devopsJobs = allJobs.filter(job =>
+            /devops|데브옵스|엔지니어|infra|클라우드|cloud|운영/i.test(job.title)
+        );
+
+        console.log(`🔎 DevOps 관련 공고 ${devopsJobs.length}개 필터링 완료!`);
+
+
         // 📌 중복 제거 (회사명 기준)
-        const uniqueJobs = Array.from(new Map(allJobs.map(job => [job.company, job])).values());
+        const uniqueJobs = Array.from(new Map(devopsJobs.map(job => [job.company, job])).values());
 
         console.log(`✅ 중복 제거 후 ${uniqueJobs.length}개의 공고 데이터 유지`);
 
