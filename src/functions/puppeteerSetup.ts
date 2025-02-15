@@ -2,7 +2,8 @@ import * as puppeteer from "puppeteer";
 
 export async function launchPuppeteer() {
     const browser = await puppeteer.launch({
-        headless: false, // ✅ 브라우저 UI를 표시하여 크롤링 확인 가능
+        // headless: false, // ✅ 브라우저 UI를 표시하여 크롤링 확인 가능
+        headless: true, // ✅ 브라우저 UI를 표시하지 않고 크롤링
         defaultViewport: null, // ✅ 뷰포트 크기 고정 해제 (윈도우 크기 설정 가능)
         args: ["--start-maximized"], // ✅ 브라우저 창 최대화
     });
