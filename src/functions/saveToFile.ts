@@ -6,6 +6,7 @@ const currentDate = new Date().toISOString().split("T")[0];
 const resultDir = path.join(__dirname, "../result", currentDate);
 
 if (!fs.existsSync(resultDir)) {
+    console.log(`✅ result 폴더 생성: ${resultDir}`);
     fs.mkdirSync(resultDir, { recursive: true });
 }
 
