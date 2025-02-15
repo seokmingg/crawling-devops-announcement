@@ -1,0 +1,16 @@
+# Node.js 관련
+node_modules/
+package-lock.json
+
+# TypeScript 컴파일 결과물
+dist/
+
+# IntelliJ IDEA settings
+.idea/
+
+
+# 환경 변수 파일 (API 키 등)
+.env
+
+# OS 관련 파일 (macOS)
+.DS_Store
