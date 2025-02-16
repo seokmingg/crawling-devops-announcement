@@ -1,17 +1,23 @@
 import { launchPuppeteer } from "./functions/puppeteerSetup";
 import { saveToFile } from "./functions/saveToFile";
-import { Scraper } from "./functions/crawlers/Scraper";
-import { wantedScraper } from "./functions/crawlers/wantedScraper";
-import { jumpitScraper } from "./functions/crawlers/jumpitScraper";
-import { saraminScraper } from "./functions/crawlers/saraminScraper";
-import { catchScraper } from "./functions/crawlers/catchScraper";
-import {jobkoreaScraper} from "./functions/crawlers/jobkoreaScraper";
-import { mergeJobListings } from "./functions/mergeJobs"; // ✅ 병합 함수 추가
+import { mergeJobListings } from "./functions/mergeJobs";
 import { starMergeCompany } from "./functions/starMergeCompany";
-import {createExcel} from "./functions/convertJsonToExcel";
+import { createExcel } from "./functions/convertJsonToExcel";
+import {createAutoScrollScraper} from "./functions/crawlers/createAutoScrollScraper";
+import {createPaginationScraper} from "./functions/crawlers/createPaginationScraper";
 
+// ✅ 검색할 키워드 설정
+const searchKeyword = "devops";
 
-const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catchScraper,jobkoreaScraper];
+// ✅ createScraper 함수를 사용하여 스크래퍼 생성
+const scrapers = [
+    createAutoScrollScraper("wanted", searchKeyword),
+    createAutoScrollScraper("jumpit", searchKeyword),
+    createPaginationScraper("jobkorea", searchKeyword, 5),
+    createPaginationScraper("saramin", searchKeyword, 2),
+    createPaginationScraper("catch", searchKeyword, 2),
+
+];
 
 (async () => {
     const { browser, page } = await launchPuppeteer();
@@ -19,7 +25,9 @@ const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catch
 
     for (const scraper of scrapers) {
         try {
-            console.log(`🔍 ${scraper.siteName} 크롤링 시작...`);
+            console.log(`🔍 ${scraper.siteName} 크롤링 시작... 키워드: "${searchKeyword}"`);
+
+            // ✅ scraper.scrape(page) 호출
             const jobListings = await scraper.scrape(page);
 
             if (jobListings.length > 0) {
@@ -36,34 +44,31 @@ const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catch
         }
     }
 
+
+
+    await browser.close();
     console.log("\n📊 크롤링 결과 요약:");
-    results.forEach((result) => {
-        if (result.status === "✅ 성공") {
-            console.log(`✅ ${result.site}: ${result.count}개 크롤링 완료`);
-        } else if (result.status === "⚠️ 데이터 없음") {
-            console.log(`⚠️ ${result.site}: 크롤링된 데이터가 없음`);
+    results.forEach(({ site, status, count }) => {
+        if (status === "✅ 성공") {
+            console.log(`✅ ${site}: ${count}개 크롤링 완료`);
+        } else if (status === "⚠️ 데이터 없음") {
+            console.log(`⚠️ ${site}: 크롤링된 데이터가 없음`);
         } else {
-            console.log(`❌ ${result.site}: 크롤링 실패`);
+            console.log(`❌ ${site}: 크롤링 실패`);
         }
     });
 
-
-    // 2) 크롤링 브라우저 종료
     await browser.close();
 
-    // 3) 병합 실행
     console.log("\n🔄 크롤링 완료! 병합 프로세스 시작...");
-    await mergeJobListings();
+    await mergeJobListings(searchKeyword);
     console.log("\n🚀 병합 작업 완료!");
 
-    // 4) 병합 후 자동으로 별점·리뷰 추가
     console.log("\n⭐ 팀블라인드 별점·리뷰 추가 시작...");
     await starMergeCompany();
     console.log("\n✅ 팀블라인드 별점·리뷰까지 모두 완료!");
 
-
     console.log("\n💿 엑셀 변환 시작...");
-    createExcel(); // convertToExcel 함수가 Promise를 반환하지 않는다면 그냥 호출
+    createExcel();
     console.log("✅ 엑셀 변환 완료!");
-
 })();
