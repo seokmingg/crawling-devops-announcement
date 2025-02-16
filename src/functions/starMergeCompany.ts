@@ -1,5 +1,5 @@
 
-// src/functions/fetchTeamBlindData.ts
+// src/functions/starMergeCompany.ts
 
 import fs from "fs";
 import path from "path";
@@ -8,46 +8,13 @@ import { Page } from "puppeteer";
 import { JobListingDTO } from "../dto/JobListing.dto";
 import {blindScraper} from "./crawlers/blindScraper";
 
-// 팀블라인드에서 별점, 리뷰 가져오기
-// async function fetchStarsAndReviews(
-//     page: Page,
-//     companyName: string
-// ): Promise<{ stars: string; reviews: string }> {
-//     try {
-//         // 팀블라인드 회사 페이지 접속
-//         const url = `https://www.teamblind.com/kr/company/${encodeURIComponent(companyName)}`;
-//         await page.goto(url, { waitUntil: "networkidle0" });
-//
-//         const ratingDiv = await page.$("div.rating");
-//         if (!ratingDiv) {
-//             return { stars: "nodata", reviews: "nodata" };
-//         }
-//
-//         // 별점 추출
-//         const stars = await page.evaluate((el) => {
-//             const starSpan = el.querySelector("span.star");
-//             if (!starSpan) return "nodata";
-//             return starSpan.textContent?.replace("Rating Score", "").trim() || "nodata";
-//         }, ratingDiv);
-//
-//         // 리뷰 수 추출
-//         const reviews = await page.evaluate((el) => {
-//             const reviewEm = el.querySelector("em.num");
-//             return reviewEm?.textContent?.trim() || "nodata";
-//         }, ratingDiv);
-//
-//         return { stars, reviews };
-//     } catch (error) {
-//         console.error(`❌ 팀블라인드 조회 실패 (${companyName}):`, error);
-//         return { stars: "nodata", reviews: "nodata" };
-//     }
-// }
+
 
 /**
  * 병합된 merged_jobs.json을 읽어와 회사별 평점, 리뷰를 추가하고,
  * star_merged.json 등으로 저장. 봇 차단 최소화를 위해 요청 사이에 지연을 둡니다.
  */
-export async function fetchTeamBlindData() {
+export async function starMergeCompany() {
     // Puppeteer 시작
     const { browser, page } = await launchPuppeteer();
 
