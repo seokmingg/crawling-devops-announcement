@@ -8,6 +8,7 @@ import { catchScraper } from "./functions/crawlers/catchScraper";
 import {jobkoreaScraper} from "./functions/crawlers/jobkoreaScraper";
 import { mergeJobListings } from "./functions/mergeJobs"; // ✅ 병합 함수 추가
 import { starMergeCompany } from "./functions/starMergeCompany";
+import {createExcel} from "./functions/convertJsonToExcel";
 
 
 const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catchScraper,jobkoreaScraper];
@@ -59,5 +60,10 @@ const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catch
     console.log("\n⭐ 팀블라인드 별점·리뷰 추가 시작...");
     await starMergeCompany();
     console.log("\n✅ 팀블라인드 별점·리뷰까지 모두 완료!");
+
+
+    console.log("\n💿 엑셀 변환 시작...");
+    createExcel(); // convertToExcel 함수가 Promise를 반환하지 않는다면 그냥 호출
+    console.log("✅ 엑셀 변환 완료!");
 
 })();
