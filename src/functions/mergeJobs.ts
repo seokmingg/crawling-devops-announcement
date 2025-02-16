@@ -4,7 +4,7 @@ import {JobListingDTO} from "../dto/JobListing.dto";
 
 const resultDir = path.join(__dirname, "../result"); // 크롤링 결과 폴더
 
-export async function mergeJobListings() {
+export async function mergeJobListings(searchKeyword:string) {
     try {
         // 📌 최신 날짜 폴더 찾기
         const dateFolders = fs.readdirSync(resultDir).filter(folder => /^\d{4}-\d{2}-\d{2}$/.test(folder));
@@ -34,15 +34,21 @@ export async function mergeJobListings() {
 
         console.log(`📊 총 ${allJobs.length}개의 공고 데이터 수집 완료!`);
 
-        // 📌 "devops" 포함된 공고만 필터링
-        const devopsJobs = allJobs.filter(job =>
-            /devops|데브옵스|엔지니어|infra|클라우드|cloud|운영/i.test(job.title)
-        );
 
-        console.log(`🔎 DevOps 관련 공고 ${devopsJobs.length}개 필터링 완료!`);
+        // ✅ 사용자가 입력한 검색어를 정규식으로 변환
+
+        const defaultKeywords = ["devops", "데브옵스", "infra", "클라우드", "cloud", "운영"]; // 기본 검색 키워드
+        const keywordRegex = new RegExp(`${searchKeyword}|${defaultKeywords.join("|")}`, "i");
+
+        // 📌 `searchKeyword` 포함된 공고만 필터링
+        const filteringJobs = allJobs.filter(job => keywordRegex.test(job.title));
+
+        console.log(`🔎 ${searchKeyword} 관련 공고 ${filteringJobs.length}개 필터링 완료!`);
+
+
 
         // 📌 회사명에서 "(주)" 또는 "주식회사" 제거
-        devopsJobs.forEach(job => {
+        filteringJobs.forEach(job => {
             job.company = job.company
                 // ㈜, (주), 주식회사 패턴을 모두 제거 (문자열 어디에 있든지 전역 삭제)
                 .replace(/(\(주\)|주식회사|㈜)/g, "")
@@ -51,7 +57,7 @@ export async function mergeJobListings() {
         });
 
         // 📌 중복 제거 (회사명 기준)
-        const uniqueJobs = Array.from(new Map(devopsJobs.map(job => [job.company, job])).values());
+        const uniqueJobs = Array.from(new Map(filteringJobs.map(job => [job.company, job])).values());
 
         console.log(`✅ 중복 제거 후 ${uniqueJobs.length}개의 공고 데이터 유지`);
 
