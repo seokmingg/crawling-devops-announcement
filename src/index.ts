@@ -7,7 +7,7 @@ import { saraminScraper } from "./functions/crawlers/saraminScraper";
 import { catchScraper } from "./functions/crawlers/catchScraper";
 import {jobkoreaScraper} from "./functions/crawlers/jobkoreaScraper";
 import { mergeJobListings } from "./functions/mergeJobs"; // ✅ 병합 함수 추가
-import { fetchTeamBlindData } from "./functions/fetchTeamBlindData";
+import { starMergeCompany } from "./functions/starMergeCompany";
 
 
 const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catchScraper,jobkoreaScraper];
@@ -57,7 +57,7 @@ const scrapers: Scraper[] = [wantedScraper, jumpitScraper, saraminScraper, catch
 
     // 4) 병합 후 자동으로 별점·리뷰 추가
     console.log("\n⭐ 팀블라인드 별점·리뷰 추가 시작...");
-    await fetchTeamBlindData();
+    await starMergeCompany();
     console.log("\n✅ 팀블라인드 별점·리뷰까지 모두 완료!");
 
 })();
