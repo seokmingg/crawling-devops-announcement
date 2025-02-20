@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {JobListingDTO} from "../dto/JobListing.dto";
+import {JobListingDto} from "../dto/JobListingDto";
 
 const resultDir = path.join(__dirname, "../result"); // 크롤링 결과 폴더
 
@@ -20,7 +20,7 @@ export async function mergeJobListings(searchKeyword:string) {
 
         // 📌 JSON 파일 읽기
         const jobFiles = fs.readdirSync(latestFolderPath).filter(file => file.endsWith(".json"));
-        let allJobs: JobListingDTO[] = [];
+        let allJobs: JobListingDto[] = [];
 
         for (const file of jobFiles) {
             if (file === "merged_jobs.json") continue; // ✅ 기존 병합 파일 제외

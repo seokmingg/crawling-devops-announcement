@@ -1,5 +1,5 @@
 import { Page } from "puppeteer";
-import { JobListingDTO } from "../../dto/JobListing.dto";
+import { JobListingDto } from "../../dto/JobListingDto";
 import { getScraperConfig } from "./getScraperConfig";
 
 export const createPaginationScraper = (siteName: string, searchKeyword: string, maxPages: number) => {
@@ -10,10 +10,10 @@ export const createPaginationScraper = (siteName: string, searchKeyword: string,
     }
 
     // ✅ 크롤링 함수 정의
-    const scrape = async (page: Page): Promise<JobListingDTO[]> => {
+    const scrape = async (page: Page): Promise<JobListingDto[]> => {
         console.log(`🔄 ${config.siteName} 크롤링 시작...`);
 
-        let jobListings: JobListingDTO[] = [];
+        let jobListings: JobListingDto[] = [];
 
         for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
             console.log(`🔄 ${config.siteName} - ${pageNum} 페이지 크롤링 중...`);

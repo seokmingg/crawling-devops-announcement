@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import { launchPuppeteer } from "./puppeteerSetup";
 import { Page } from "puppeteer";
-import { JobListingDTO } from "../dto/JobListing.dto";
+import { JobListingDto } from "../dto/JobListingDto";
 import {blindScraper} from "./crawlers/blindScraper";
 
 
@@ -41,7 +41,7 @@ export async function starMergeCompany() {
         }
 
         const rawData = fs.readFileSync(mergedFilePath, "utf-8");
-        const mergedJobs = JSON.parse(rawData) as JobListingDTO[];
+        const mergedJobs = JSON.parse(rawData) as JobListingDto[];
 
         console.log(`🔍 merged_jobs.json 파일 읽기 완료: 총 ${mergedJobs.length}건`);
 

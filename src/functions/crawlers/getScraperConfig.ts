@@ -1,5 +1,5 @@
 import { Page } from "puppeteer";
-import { JobListingDTO } from "../../dto/JobListing.dto";
+import { JobListingDto } from "../../dto/JobListingDto";
 import { ScraperConfigDto } from "../../dto/ScraperConfigDto";
 
 export const getScraperConfig = (siteName: string): ScraperConfigDto | undefined => {
@@ -10,7 +10,7 @@ export const getScraperConfig = (siteName: string): ScraperConfigDto | undefined
             searchUrl: (searchKeyword: string) =>
                 `https://www.wanted.co.kr/search?query=${encodeURIComponent(searchKeyword)}&tab=position`,
             listSelector: ".JobCard_container__REty8", // ✅ 추가 (선택자 정의)
-            extractJobListings: async (page: Page): Promise<JobListingDTO[]> => {
+            extractJobListings: async (page: Page): Promise<JobListingDto[]> => {
                 return await page.evaluate(() => {
                     return Array.from(document.querySelectorAll(".JobCard_container__REty8")).map(jobCard => {
                         const titleElement = jobCard.querySelector(".JobCard_title__HBpZf");
@@ -33,7 +33,7 @@ export const getScraperConfig = (siteName: string): ScraperConfigDto | undefined
             searchUrl: (searchKeyword: string) =>
                 `https://www.jumpit.co.kr/search?keyword=${encodeURIComponent(searchKeyword)}`,
             listSelector: ".sc-d609d44f-0", // ✅ 추가
-            extractJobListings: async (page: Page): Promise<JobListingDTO[]> => {
+            extractJobListings: async (page: Page): Promise<JobListingDto[]> => {
                 return await page.evaluate(() => {
                     return Array.from(document.querySelectorAll(".sc-d609d44f-0")).map(jobCard => {
                         const titleElement = jobCard.querySelector("h2.position_card_info_title");
@@ -56,7 +56,7 @@ export const getScraperConfig = (siteName: string): ScraperConfigDto | undefined
             searchUrl: (searchKeyword: string, pageNum: number = 1) =>
                 `https://www.jobkorea.co.kr/Search/?stext=${encodeURIComponent(searchKeyword)}&FeatureCode=TOT&tabType=recruit&Page_No=${pageNum}`,
             listSelector: ".list-item", // ✅ 추가
-            extractJobListings: async (page: Page): Promise<JobListingDTO[]> => {
+            extractJobListings: async (page: Page): Promise<JobListingDto[]> => {
                 return await page.evaluate(() => {
                     return Array.from(document.querySelectorAll(".list-item")).map(jobCard => {
                         const titleElement = jobCard.querySelector(".information-title-link");
@@ -80,7 +80,7 @@ export const getScraperConfig = (siteName: string): ScraperConfigDto | undefined
             searchUrl: (searchKeyword: string, pageNum: number = 1) =>
                 `https://www.saramin.co.kr/zf_user/search/recruit?search_area=main&search_done=y&search_optional_item=n&searchType=search&searchword=${encodeURIComponent(searchKeyword)}&recruitPage=${pageNum}&recruitSort=relation&recruitPageCount=100`,
             listSelector: ".item_recruit",
-            extractJobListings: async (page: Page): Promise<JobListingDTO[]> => {
+            extractJobListings: async (page: Page): Promise<JobListingDto[]> => {
                 return await page.evaluate(() => {
                     return Array.from(document.querySelectorAll(".item_recruit")).map(jobCard => {
                         const titleElement = jobCard.querySelector("h2.job_tit a");
@@ -105,7 +105,7 @@ export const getScraperConfig = (siteName: string): ScraperConfigDto | undefined
             searchUrl: (searchKeyword: string, pageNum: number = 1) =>
                 `https://www.catch.co.kr/Search/SearchDetail?CurrentPage=${pageNum}&Keyword=${encodeURIComponent(searchKeyword)}&Menu=2`,
             listSelector: "li .txt",
-            extractJobListings: async (page: Page): Promise<JobListingDTO[]> => {
+            extractJobListings: async (page: Page): Promise<JobListingDto[]> => {
                 return await page.evaluate(() => {
                     return Array.from(document.querySelectorAll("li")).map(jobCard => {
                         const companyElement = jobCard.querySelector("p.name a");

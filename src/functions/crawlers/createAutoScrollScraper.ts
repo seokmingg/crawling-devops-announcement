@@ -1,5 +1,5 @@
 import { Page } from "puppeteer";
-import { JobListingDTO } from "../../dto/JobListing.dto";
+import { JobListingDto } from "../../dto/JobListingDto";
 import {autoScroll} from "../autoScroll";
 import {getScraperConfig} from "./getScraperConfig";
 
@@ -13,7 +13,7 @@ export const createAutoScrollScraper = (siteName: string, searchKeyword: string)
     }
 
     // ✅ 크롤링 함수 정의
-    const scrape = async (page: Page): Promise<JobListingDTO[]> => {
+    const scrape = async (page: Page): Promise<JobListingDto[]> => {
         console.log(`🔄 ${config.siteName} 크롤링 시작...`);
 
         await page.goto(config.searchUrl(searchKeyword), { waitUntil: "networkidle2" });

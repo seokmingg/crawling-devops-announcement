@@ -1,4 +1,4 @@
-import {JobListingDTO} from "./JobListing.dto";
+import {JobListingDto} from "./JobListingDto";
 import {Page} from "puppeteer";
 
 
@@ -7,5 +7,5 @@ export interface ScraperConfigDto {
     url: string;
     searchUrl: (searchKeyword: string, pageNum?: number) => string;
     listSelector: string; // ✅ 추가
-    extractJobListings: (page: Page) => Promise<JobListingDTO[]>;
+    extractJobListings: (page: Page) => Promise<JobListingDto[]>;
 }

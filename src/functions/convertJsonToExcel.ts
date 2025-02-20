@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import * as XLSX from 'xlsx';
-import {JobListingDTO} from "../dto/JobListing.dto";
+import {JobListingDto} from "../dto/JobListingDto";
 
 const resultDir = path.join(__dirname, '../result');
 
@@ -18,7 +18,7 @@ function getLatestFolder(directory: string): string | null {
 // JSON 데이터를 엑셀로 변환하여 저장
 function convertJsonToExcel(jsonFilePath: string, outputFilePath: string) {
     const rawData = fs.readFileSync(jsonFilePath, 'utf-8');
-    const jsonData:JobListingDTO = JSON.parse(rawData);
+    const jsonData:JobListingDto = JSON.parse(rawData);
 
     if (!Array.isArray(jsonData)) {
         console.error('JSON 데이터가 배열 형태가 아닙니다.');
@@ -32,7 +32,7 @@ function convertJsonToExcel(jsonFilePath: string, outputFilePath: string) {
     ];
 
     // 각 JSON 객체를 행으로 변환
-    jsonData.forEach((job:JobListingDTO) => {
+    jsonData.forEach((job:JobListingDto) => {
         const row = [
             job.title || '',
             job.company || '',
