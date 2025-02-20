@@ -1,5 +1,5 @@
 import {Page} from "puppeteer";
-// import {Scraper} from "./Scraper";
+
 
 
 /**
@@ -38,3 +38,4 @@ export async function blindScraper(
         return { stars: "nodata", reviews: "nodata" };
     }
 }
+
