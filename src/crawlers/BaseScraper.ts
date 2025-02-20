@@ -4,7 +4,7 @@ import { getScraperConfig } from "../config/getScraperConfig";
 import { ScraperConfigDto } from "../types/ScraperConfigDto";
 
 export abstract class BaseScraper {
-    protected siteName: string;
+    public siteName: string;
     protected searchKeyword: string;
     protected config: ScraperConfigDto;
 
