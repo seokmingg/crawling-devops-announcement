@@ -1,4 +1,4 @@
-import { launchPuppeteer } from "./utils/puppeteerSetup";
+import { launchPuppeteer } from "./config/puppeteerSetup";
 import { saveToFile } from "./utils/saveToFile";
 import { mergeJobListings } from "./utils/mergeJobs";
 import { starMergeCompany } from "./utils/starMergeCompany";
@@ -22,6 +22,12 @@ const scrapers = [
     const { browser, page } = await launchPuppeteer();
     const results: { site: string; status: string; count?: number; error?: any }[] = [];
 
+
+
+
+
+
+
     try {
         for (const scraper of scrapers) {
             try {
@@ -43,7 +49,56 @@ const scrapers = [
                 results.push({ site: scraper.siteName, status: "❌ 실패", error });
             }
         }
-    } finally {
+
+
+    }
+
+
+    /*
+    * Promise.allSettled를 사용하여 병렬 크롤링
+    * 안됨 무한스크롤 방식 사이트끼리 겹쳐서 스크롤오류때문에 크롤링이안됨
+    * */
+    // try {
+    //     console.log("🚀 병렬 크롤링 시작...");
+    //
+    //     // ✅ 병렬 실행 (Promise.all 사용)
+    //     const scrapeResults = await Promise.allSettled(
+    //         scrapers.map(async (scraper) => {
+    //             const page = await browser.newPage(); // ✅ 개별 페이지 생성
+    //             try {
+    //                 console.log(`🔍 ${scraper.siteName} 크롤링 시작... 키워드: "${searchKeyword}"`);
+    //                 const jobListings = await scraper.scrape(page);
+    //                 await page.close(); // ✅ 크롤링 끝나면 개별 페이지 닫기
+    //
+    //                 if (jobListings.length > 0) {
+    //                     await saveToFile(jobListings, scraper.siteName);
+    //                     console.log(`✅ ${scraper.siteName}: ${jobListings.length}개 크롤링 완료!`);
+    //                     return { site: scraper.siteName, status: "✅ 성공", count: jobListings.length };
+    //                 } else {
+    //                     console.warn(`⚠️ ${scraper.siteName}: 크롤링된 데이터가 없습니다.`);
+    //                     return { site: scraper.siteName, status: "⚠️ 데이터 없음", count: 0 };
+    //                 }
+    //             } catch (error) {
+    //                 console.error(`❌ ${scraper.siteName}: 크롤링 실패! 오류:`, error);
+    //                 return { site: scraper.siteName, status: "❌ 실패", error };
+    //             }
+    //         })
+    //     );
+    //
+    //     // ✅ 결과 처리
+    //     scrapeResults.forEach((result) => {
+    //         if (result.status === "fulfilled") {
+    //             results.push(result.value);
+    //         } else {
+    //             console.error(`❌ 오류 발생: ${result.reason}`);
+    //         }
+    //     });
+    // }
+
+
+
+
+    finally {
         // ✅ browser.close()는 한 번만 호출
         await browser.close();
     }
