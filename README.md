@@ -28,32 +28,42 @@ npm run start
 ## 📂 프로젝트 폴더 구조
 ```plaintext
 crawling-devops-announcement/
-│── src/
-│   ├── index.ts                # 메인 실행 파일 (모든 크롤링 사이트 순회 & 실행 & 중복제거 & 엑셀변환)
-│   ├── result/                  #  크롤링 데이터 저장 폴더
-│   │   ├── 2025-02-15/           #  날짜별 폴더 (자동 생성)
-│   │   │   ├── star_merged.xlsx  #  회사별로별점추가된 데이터 엑셀파일
-│   │   │   ├── star_merged.json  #  mareged_jobs.json에서 회사별로별점추가된 데이터
-│   │   │   ├── merged_jobs.json  #  크롤링후 합쳐진 중복제거된 데이터
-│   │   │   ├── saramin_jobs.json #  사람인 크롤링 데이터
-│   │   │   ├── jobkorea_jobs.json#  잡코리아 크롤링 데이터
-│   ├── dto/
-│   │   ├── JobListingDto.ts     # DTO 정의 (채용 공고 데이터 타입)
-│   ├── functions/
-│   │   ├── puppeteerSetup.ts     # Puppeteer 초기화 관련 코드 (브라우저 설정)
-│   │   ├── autoScroll.ts         #  무한 스크롤 함수 (점핏, 원티드등등 무한스크롤형식인사이트사용)
-│   │   ├── saveToFile.ts         #  JSON 파일 저장 함수 (날짜별로 저장)
-|   |   ├── starMergeCompany.ts   #  JSON 파일 병합 함수 (회사별로 별점 추가)
-│   │   ├── mergeJobs.ts         #  JSON 파일 병합 함수 (중복제거)
-│   │   ├── convertJsonToExcel.ts     #  JSON 파일 엑셀로 변환 함수
-│   │   ├── crawlers/             #  사이트별 크롤러 폴더
-│   │   │   ├── blindScraper.ts   #  블라인드 크롤러(별점확인위해 회사들을 하나하나 검색후 크롤링)
-│   │   │   ├── getScraperConfig.ts  #  크롤러 설정 (사이트별로 크롤링할 타겟설정 ,새로운사이트추가나,해당사이트url이나 Css가 변경될시 여기 수정해야함) 
-│   │   │   ├── createAutoScrollScraper.ts  # 사이트가 무한스크롤방식일때 사용 (무한 스크롤)
-│   │   │   ├── createPagingScraper.ts  # 사이트가 페이징방식일때 사용 (페이지네이션)
-│── package.json                  # 프로젝트 패키지 관리
-│── tsconfig.json                  # TypeScript 설정
-│── README.md                      # 프로젝트 설명 문서
+├── config/                      # 설정 관련 파일
+│   ├── getScraperConfig.ts      # 사이트별 크롤링 설정 관리
+│   └── puppeteerSetup.ts        # Puppeteer 브라우저 설정
+│
+├── crawlers/                    # 크롤러 관련 파일
+│   ├── AutoScrollScraper.ts     # 무한 스크롤 방식 크롤러
+│   ├── BaseScraper.ts           # 크롤러 공통 기능을 정의한 베이스 클래스
+│   ├── PaginationScraper.ts     # 페이지네이션 방식 크롤러
+│   └── blindScraper.ts          # 팀블라인드 크롤러 (별점 수집)
+│
+├── index.ts                     # 메인 실행 파일 (크롤링 실행 및 데이터 처리)
+│
+├── result/                      # 크롤링된 데이터 저장 폴더 (날짜별 자동 생성)
+│   ├── 2025-02-15/              # 날짜별 크롤링 데이터 저장
+│   │   ├── catch_jobs.json
+│   │   ├── jobkorea_jobs.json
+│   │   ├── jumpit_jobs.json
+│   │   ├── merged_jobs.json
+│   │   ├── saramin_jobs.json
+│   │   ├── star_merged.json
+│   │   └── wanted_jobs.json
+│
+├── types/                       # TypeScript 타입 정의
+│   ├── JobListingDto.ts         # 채용 공고 데이터 타입
+│   └── ScraperConfigDto.ts      # 크롤러 설정 타입
+│
+├── utils/                       # 공통 유틸리티 함수
+│   ├── autoScroll.ts            # 무한 스크롤 처리 함수
+│   ├── convertJsonToExcel.ts    # JSON 데이터를 엑셀로 변환하는 함수
+│   ├── mergeJobs.ts             # 크롤링된 데이터를 병합하는 함수
+│   ├── saveToFile.ts            # 크롤링된 데이터를 JSON 파일로 저장하는 함수
+│   └── starMergeCompany.ts      # 팀블라인드 별점 데이터를 병합하는 함수
+│
+├── package.json                 # 프로젝트 패키지 관리
+├── tsconfig.json                 # TypeScript 설정
+├── README.md                     # 프로젝트 설명 문서
 
 
 ```
@@ -61,17 +71,30 @@ crawling-devops-announcement/
 ## 🛠 사이트 추가
 - **새로운 사이트를 추가 및 기존사이트 크롤링이**안된다면 `src/functions/crawlers/getScraperConfig.ts` 파일에서
 - 새로운 페이지형식에 맞춰 추가 및 수정 해야합니다.
-- **getScraperConfig.ts**에 페이지추가후 **index.ts**에서  Const scrapers = [
-  createAutoScrollScraper("wanted", searchKeyword),
-  createAutoScrollScraper("jumpit", searchKeyword),
-  createPaginationScraper("jobkorea", searchKeyword, 5),
-  createPaginationScraper("saramin", searchKeyword, 2),
-  createPaginationScraper("catch", searchKeyword, 2),
-  createAutoScrollScraper("새로운사이트", searchKeyword),
-];
+- **getScraperConfig.ts**에 페이지추가후 **index.ts**에서 
+- const scrapers = [
+  new AutoScrollScraper("wanted", searchKeyword),
+  new AutoScrollScraper("jumpit", searchKeyword),
+  new PaginationScraper("jobkorea", searchKeyword, 5),
+  new PaginationScraper("saramin", searchKeyword, 2),
+  new PaginationScraper("catch", searchKeyword, 2),
+  new AutoScrollScraper("새로운사이트", searchKeyword),
+  ];
+
 - 형식에 해당사이트 페이징 형식에 맞춰 추가합니다.
 - 
 - ex) Devops검색시 Devops 뿐만아니라 추가로 여러가지 공고들이나오는데 mergeJobs.ts 40번째줄에서  추가 설정할 수 있습니다.
 - Default = ["devops", "데브옵스", "infra", "클라우드", "cloud", "운영"];
 - 
 
+🚀 리팩토링 및 성능 개선 사항
+
+✅ 클래스 기반 리팩토링 적용
+•	BaseScraper.ts를 추가하여 공통 크롤링 로직을 클래스로 관리
+•	PaginationScraper.ts, AutoScrollScraper.ts는 각 크롤러의 특성에 맞게 클래스로 변환
+•	blindScraper.ts는 함수형 그대로 유지하여 간결한 구조 유지
+
+✅ 코드 구조 정리
+•	사이트별 공통 크롤링 로직을 getScraperConfig.ts에서 관리하여 유지보수성 향상
+•	공통 HTML 요소 추출 함수 (getText(), getLink()) 추가하여 중복 코드 제거
+•	팀블라인드 크롤러(BlindScraper.ts)는 함수형 방식 유지하여 간결한 구조 유지
