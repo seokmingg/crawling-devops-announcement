@@ -38,7 +38,7 @@ crawling-devops-announcement/
 │   │   │   ├── saramin_jobs.json #  사람인 크롤링 데이터
 │   │   │   ├── jobkorea_jobs.json#  잡코리아 크롤링 데이터
 │   ├── dto/
-│   │   ├── JobListing.dto.ts     # DTO 정의 (채용 공고 데이터 타입)
+│   │   ├── JobListingDto.ts     # DTO 정의 (채용 공고 데이터 타입)
 │   ├── functions/
 │   │   ├── puppeteerSetup.ts     # Puppeteer 초기화 관련 코드 (브라우저 설정)
 │   │   ├── autoScroll.ts         #  무한 스크롤 함수 (점핏, 원티드등등 무한스크롤형식인사이트사용)

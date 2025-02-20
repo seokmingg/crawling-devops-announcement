@@ -1,6 +1,6 @@
 import { Page } from "puppeteer";
-import { JobListingDto } from "../../dto/JobListingDto";
-import {autoScroll} from "../autoScroll";
+import { JobListingDto } from "../types/JobListingDto";
+import {autoScroll} from "../utils/autoScroll";
 import {getScraperConfig} from "./getScraperConfig";
 
 export const createAutoScrollScraper = (siteName: string, searchKeyword: string) => {

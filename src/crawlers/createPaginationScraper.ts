@@ -1,5 +1,5 @@
 import { Page } from "puppeteer";
-import { JobListingDto } from "../../dto/JobListingDto";
+import { JobListingDto } from "../types/JobListingDto";
 import { getScraperConfig } from "./getScraperConfig";
 
 export const createPaginationScraper = (siteName: string, searchKeyword: string, maxPages: number) => {

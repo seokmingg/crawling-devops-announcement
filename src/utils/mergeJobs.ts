@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {JobListingDto} from "../dto/JobListingDto";
+import {JobListingDto} from "../types/JobListingDto";
 
 const resultDir = path.join(__dirname, "../result"); // 크롤링 결과 폴더
 

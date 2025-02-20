@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { JobListingDto } from "../dto/JobListingDto";
+import { JobListingDto } from "../types/JobListingDto";
 
 const currentDate = new Date().toISOString().split("T")[0];
 const resultDir = path.join(__dirname, "../result", currentDate);

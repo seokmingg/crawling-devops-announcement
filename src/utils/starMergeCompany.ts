@@ -5,8 +5,8 @@ import fs from "fs";
 import path from "path";
 import { launchPuppeteer } from "./puppeteerSetup";
 import { Page } from "puppeteer";
-import { JobListingDto } from "../dto/JobListingDto";
-import {blindScraper} from "./crawlers/blindScraper";
+import { JobListingDto } from "../types/JobListingDto";
+import {blindScraper} from "../crawlers/blindScraper";
 
 
 

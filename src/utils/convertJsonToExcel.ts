@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import * as XLSX from 'xlsx';
-import {JobListingDto} from "../dto/JobListingDto";
+import {JobListingDto} from "../types/JobListingDto";
 
 const resultDir = path.join(__dirname, '../result');
 

@@ -1,6 +1,6 @@
 import { Page } from "puppeteer";
-import { JobListingDto } from "../../dto/JobListingDto";
-import { ScraperConfigDto } from "../../dto/ScraperConfigDto";
+import { JobListingDto } from "../types/JobListingDto";
+import { ScraperConfigDto } from "../types/ScraperConfigDto";
 
 export const getScraperConfig = (siteName: string): ScraperConfigDto | undefined => {
     const configs: Record<string, ScraperConfigDto> = {

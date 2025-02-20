@@ -1,10 +1,10 @@
-import { launchPuppeteer } from "./functions/puppeteerSetup";
-import { saveToFile } from "./functions/saveToFile";
-import { mergeJobListings } from "./functions/mergeJobs";
-import { starMergeCompany } from "./functions/starMergeCompany";
-import { createExcel } from "./functions/convertJsonToExcel";
-import {createAutoScrollScraper} from "./functions/crawlers/createAutoScrollScraper";
-import {createPaginationScraper} from "./functions/crawlers/createPaginationScraper";
+import { launchPuppeteer } from "./utils/puppeteerSetup";
+import { saveToFile } from "./utils/saveToFile";
+import { mergeJobListings } from "./utils/mergeJobs";
+import { starMergeCompany } from "./utils/starMergeCompany";
+import { createExcel } from "./utils/convertJsonToExcel";
+import {createAutoScrollScraper} from "./crawlers/createAutoScrollScraper";
+import {createPaginationScraper} from "./crawlers/createPaginationScraper";
 
 // ✅ 검색할 키워드 설정
 const searchKeyword = "devops";
