@@ -3,7 +3,7 @@
 
 import fs from "fs";
 import path from "path";
-import { launchPuppeteer } from "./puppeteerSetup";
+import { launchPuppeteer } from "../config/puppeteerSetup";
 import { Page } from "puppeteer";
 import { JobListingDto } from "../types/JobListingDto";
 import {blindScraper} from "../crawlers/blindScraper";
