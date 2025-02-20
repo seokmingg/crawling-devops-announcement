@@ -1,20 +1,23 @@
 import { Page } from "puppeteer";
 import { JobListingDto } from "../types/JobListingDto";
 import { getScraperConfig } from "../config/getScraperConfig";
+import { ScraperConfigDto } from "../types/ScraperConfigDto";
 
 export abstract class BaseScraper {
     protected siteName: string;
     protected searchKeyword: string;
-    protected config: any;
+    protected config: ScraperConfigDto;
 
     constructor(siteName: string, searchKeyword: string) {
         this.siteName = siteName;
         this.searchKeyword = searchKeyword;
-        this.config = getScraperConfig(siteName);
+        const scraperConfig = getScraperConfig(siteName);
 
-        if (!this.config) {
+        if (!scraperConfig) {
             throw new Error(`❌ [오류] ${siteName} 크롤러 설정을 찾을 수 없습니다.`);
         }
+
+        this.config = scraperConfig;
     }
 
     public async scrape(page: Page): Promise<JobListingDto[]> {
