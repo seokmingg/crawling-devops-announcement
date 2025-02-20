@@ -1,11 +1,27 @@
 import { Page } from "puppeteer";
 import { JobListingDto } from "../types/JobListingDto";
 import {autoScroll} from "../utils/autoScroll";
-import {getScraperConfig} from "./getScraperConfig";
+import {getScraperConfig} from "../config/getScraperConfig";
 import { BaseScraper } from "./BaseScraper";
 
 
+export class AutoScrollScraper extends BaseScraper {
+    constructor(siteName: string, searchKeyword: string) {
+        super(siteName, searchKeyword);
+    }
 
+    protected async fetchJobs(page: Page): Promise<JobListingDto[]> {
+        await page.goto(this.config.searchUrl(this.searchKeyword), { waitUntil: "networkidle2" });
+
+        await autoScroll(page, 150);
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        const jobListings = await this.config.extractJobListings(page);
+
+        console.log(`✅ ${this.siteName}에서 ${jobListings.length}개 공고 크롤링 완료!`);
+        return jobListings;
+    }
+}
 
 
 

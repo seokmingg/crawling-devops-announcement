@@ -1,7 +1,40 @@
 import { Page } from "puppeteer";
 import { JobListingDto } from "../types/JobListingDto";
 import {BaseScraper} from "./BaseScraper";
-//
+
+
+export class PaginationScraper extends BaseScraper {
+    private maxPages: number;
+
+    constructor(siteName: string, searchKeyword: string, maxPages: number) {
+        super(siteName, searchKeyword);
+        this.maxPages = maxPages;
+    }
+
+    protected async fetchJobs(page: Page): Promise<JobListingDto[]> {
+        let jobListings: JobListingDto[] = [];
+
+        for (let pageNum = 1; pageNum <= this.maxPages; pageNum++) {
+            console.log(`🔄 ${this.siteName} - ${pageNum} 페이지 크롤링 중...`);
+
+            const pageUrl = this.config.searchUrl(this.searchKeyword, pageNum);
+            await page.goto(pageUrl, { waitUntil: "networkidle2" });
+
+            await page.waitForSelector(this.config.listSelector, { timeout: 10000 });
+
+            const newJobs = await this.config.extractJobListings(page);
+            jobListings = jobListings.concat(newJobs);
+
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+
+        return jobListings;
+    }
+}
+
+
+
+//기존 함수형
 // export const createPaginationScraper = (siteName: string, searchKeyword: string, maxPages: number) => {
 //     const config = getScraperConfig(siteName);
 //
@@ -41,32 +74,3 @@ import {BaseScraper} from "./BaseScraper";
 //     // ✅ siteName과 scrape 함수를 포함한 객체 반환
 //     return { siteName: config.siteName, scrape };
 // };
-
-export class PaginationScraper extends BaseScraper {
-    private maxPages: number;
-
-    constructor(siteName: string, searchKeyword: string, maxPages: number) {
-        super(siteName, searchKeyword);
-        this.maxPages = maxPages;
-    }
-
-    protected async fetchJobs(page: Page): Promise<JobListingDto[]> {
-        let jobListings: JobListingDto[] = [];
-
-        for (let pageNum = 1; pageNum <= this.maxPages; pageNum++) {
-            console.log(`🔄 ${this.siteName} - ${pageNum} 페이지 크롤링 중...`);
-
-            const pageUrl = this.config.searchUrl(this.searchKeyword, pageNum);
-            await page.goto(pageUrl, { waitUntil: "networkidle2" });
-
-            await page.waitForSelector(this.config.listSelector, { timeout: 10000 });
-
-            const newJobs = await this.config.extractJobListings(page);
-            jobListings = jobListings.concat(newJobs);
-
-            await new Promise(resolve => setTimeout(resolve, 2000));
-        }
-
-        return jobListings;
-    }
-}

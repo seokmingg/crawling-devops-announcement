@@ -1,6 +1,6 @@
 import { Page } from "puppeteer";
 import { JobListingDto } from "../types/JobListingDto";
-import { getScraperConfig } from "./getScraperConfig";
+import { getScraperConfig } from "../config/getScraperConfig";
 
 export abstract class BaseScraper {
     protected siteName: string;
