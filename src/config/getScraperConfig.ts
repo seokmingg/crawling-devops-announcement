@@ -12,21 +12,19 @@ const siteConfigs: Record<string, ScraperConfigDto> = {
         url: "https://www.wanted.co.kr/search",
         searchUrl: (searchKeyword: string) =>
             `https://www.wanted.co.kr/search?query=${encodeURIComponent(searchKeyword)}&tab=position`,
-        listSelector: ".JobCard_container__REty8",
+        listSelector: "a[data-position-id]",
         extractJobListings: async (page: Page): Promise<JobListingDto[]> => {
             return await page.evaluate(() => {
-                const getText = (element: Element | null): string => {
-                    return element ? element.textContent?.trim() || "정보 없음" : "정보 없음";
-                };
+                const getText = (element: Element | null): string =>
+                    element ? element.textContent?.trim() || "정보 없음" : "정보 없음";
 
-                const getLink = (element: Element | null, baseUrl: string): string => {
-                    return element ? `${baseUrl}${element.getAttribute("href")}` : "링크 없음";
-                };
+                const getLink = (element: Element | null): string =>
+                    element ? `https://www.wanted.co.kr${element.getAttribute("href")}` : "링크 없음";
 
-                return Array.from(document.querySelectorAll(".JobCard_container__REty8")).map(jobCard => ({
-                    title: getText(jobCard.querySelector(".JobCard_title__HBpZf")),
-                    company: getText(jobCard.querySelector(".JobCard_companyName__N1YrF")),
-                    link: getLink(jobCard.querySelector("a"), "https://www.wanted.co.kr"),
+                return Array.from(document.querySelectorAll("a[data-position-id]")).map(card => ({
+                    title: getText(card.querySelector(".JobCard_title___kfvj")),
+                    company: getText(card.querySelector(".JobCard_companyName__kmtE0")),
+                    link: getLink(card),
                 }));
             });
         }
