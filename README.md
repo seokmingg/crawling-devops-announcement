@@ -25,6 +25,9 @@ npm run start
 
 ```
 ---
+### 📸 결과 예시
+![Excel 결과 예시](src/images/excel-sample.png)
+---
 ## 📂 프로젝트 폴더 구조
 ```plaintext
 crawling-devops-announcement/
